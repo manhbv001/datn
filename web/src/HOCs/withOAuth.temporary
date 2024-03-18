@@ -1,0 +1,18 @@
+import OAuthProvider from '@/contexts/auth/OAuthProvider';
+import { ComponentType } from 'react';
+
+const withAuth = <T extends Record<string, any>>(
+  WrappedComponent: ComponentType<T>,
+) => {
+  function WrapComponent(props: T) {
+    return (
+      <OAuthProvider>
+        <WrappedComponent {...props} />
+      </OAuthProvider>
+    );
+  }
+
+  return WrapComponent;
+};
+
+export default withOAuth;

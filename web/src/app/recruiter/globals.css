@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+}
+
+.ck.ck-content.ck-editor__editable.ck-rounded-corners.ck-editor__editable_inline {
+    min-height: 300px;
+    max-height: 600px;
+}

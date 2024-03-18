@@ -1,0 +1,27 @@
+.active-menu-item {
+  z-index: 1;
+  position: relative;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.active-menu-item::before,
+.active-menu-item.active::before {
+  content: '';
+  z-index: -1;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background-color: white;
+  transform-origin: center right;
+  transform: scaleX(0);
+  transition: transform 0.5s ease-in-out;
+}
+
+.active-menu-item:hover::before,
+.active-menu-item.active::before {
+  transform-origin: center left;
+  transform: scaleX(1);
+}
