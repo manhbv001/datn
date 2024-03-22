@@ -1,15 +1,17 @@
 import { Button, Input, Modal } from 'antd';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 export interface IResumeSubmitFormProps {
   visible: boolean;
   onClose: () => void;
   onSubmitted: (name: string) => void;
+  initTitle?: string;
 }
 const ResumeSubmitForm: FC<IResumeSubmitFormProps> = ({
   visible,
   onClose,
   onSubmitted,
+  initTitle,
 }) => {
   const [name, setName] = useState<string>('');
 
@@ -18,9 +20,14 @@ const ResumeSubmitForm: FC<IResumeSubmitFormProps> = ({
   };
 
   const handleSubmitted = () => {
+    if (!name) return alert('Tên không được để trống');
     onSubmitted(name);
     setName('');
   };
+
+  useEffect(() => {
+    setName(initTitle || '');
+  }, [initTitle]);
 
   return (
     <div>
@@ -42,7 +49,12 @@ const ResumeSubmitForm: FC<IResumeSubmitFormProps> = ({
           </Button>,
         ]}
       >
-        <Input onChange={handleNameChange} placeholder="VD: Mẫu CV chính" />
+        <Input
+          onChange={handleNameChange}
+          value={name}
+          placeholder="VD: Mẫu CV chính"
+          required
+        />
       </Modal>
     </div>
   );

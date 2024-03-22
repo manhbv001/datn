@@ -2,11 +2,11 @@
 'use client';
 import { ResumeModel } from '@/models/resume.model';
 import { resumeService } from '@/services/resume.service';
-import { useToPng } from '@hugocxl/react-to-image';
 import TextArea from 'antd/es/input/TextArea';
 import { FC, useEffect, useState } from 'react';
-import { IoMdDownload } from 'react-icons/io';
+import { IoIosPrint, IoMdDownload } from 'react-icons/io';
 import '../../../../globals.css';
+
 export interface IViewResumePageProps {
   params: {
     id: string;
@@ -14,23 +14,16 @@ export interface IViewResumePageProps {
 }
 
 const ViewResumePage: FC<IViewResumePageProps> = ({ params }) => {
-  const [, convertToPng, ref] = useToPng<HTMLDivElement>({
-    onSuccess: (data) => {
-      const link = document.createElement('a');
-      const title = document.title;
-      link.download = `${title}.png`;
-      link.href = data;
-      link.click();
-    },
-    fetchRequestInit: {
-      headers: {
-        'Cache-Control': 'no-cache',
-      },
-    },
-  });
-
   const [data, setData] = useState<ResumeModel | undefined>();
   const { id } = params;
+
+  useEffect(() => {
+    if (!id) return;
+
+    resumeService.getOne(+id).then((res) => {
+      if (res.success) setData(res.data);
+    });
+  }, [id]);
 
   const {
     personalInfo,
@@ -43,19 +36,9 @@ const ViewResumePage: FC<IViewResumePageProps> = ({ params }) => {
     skills,
   } = (data && JSON.parse(data.information)) || {};
 
-  useEffect(() => {
-    if (!id) return;
-
-    resumeService.getOne(+id).then((res) => {
-      if (res.success) setData(res.data);
-    });
-  }, [id]);
-
-  useEffect(() => {
-    document.title = `CV của ${personalInfo?.name}`;
-  }, [personalInfo]);
-
   if (!data) return null;
+
+  const handleDownloadPDFCv = () => {};
 
   return (
     <div>
@@ -64,14 +47,18 @@ const ViewResumePage: FC<IViewResumePageProps> = ({ params }) => {
           <div className="w-2/3 relative">
             <div className="sticky top-0 w-full flex">
               <button
-                onClick={convertToPng}
-                className="w-full text-white py-2 bg-[var(--primary-color)] flex justify-center items-center gap-x-1"
+                onClick={handleDownloadPDFCv}
+                className="w-1/2 text-white py-2 bg-[var(--primary-color)] flex justify-center items-center gap-x-1"
               >
                 Tải xuống <IoMdDownload />
               </button>
+              <button className="w-1/2 text-white py-2 bg-blue-500 flex justify-center items-center gap-x-1">
+                In CV
+                <IoIosPrint />
+              </button>
             </div>
             <div>
-              <div ref={ref} id="cv">
+              <div id="cv">
                 <div className="w-full h-full flex justify-center items-center">
                   <div className="bg-gray-50 px-2 w-full pt-10 border rounded">
                     <div className="flex justify-between items-center px-3 pt-8 pb-4 mb-4 bg-slate-800">

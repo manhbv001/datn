@@ -14,3 +14,13 @@ export class CreateResumeDto {
   @ApiProperty()
   information: string;
 }
+
+export class UpdateResumeDto {
+  @IsString()
+  @ApiProperty()
+  name: string;
+
+  @IsString()
+  @ApiProperty()
+  information: string;
+}

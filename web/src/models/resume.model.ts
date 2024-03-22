@@ -17,3 +17,8 @@ export interface CreateResumePayload {
   template_id: number;
   information: string;
 }
+
+export interface UpdateResumePayload {
+  name: string;
+  information: string;
+}

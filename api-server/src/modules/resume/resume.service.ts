@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateResumeDto } from './resume.dto';
+import { CreateResumeDto, UpdateResumeDto } from './resume.dto';
 import { Resume } from './resume.entity';
 
 export class ResumeService {
@@ -20,6 +20,19 @@ export class ResumeService {
     return this.repository.save(newResume);
   }
 
+  update(id: number, payload: UpdateResumeDto, userId: number) {
+    return this.repository.update(
+      {
+        id,
+        user_id: userId,
+      },
+      {
+        information: payload.information,
+        name: payload.name,
+      }
+    );
+  }
+
   findByUser(userId: number) {
     return this.repository.find({
       where: {
@@ -33,6 +46,13 @@ export class ResumeService {
       where: {
         id,
       },
+    });
+  }
+
+  delete(id: number, userId: number) {
+    return this.repository.softDelete({
+      id,
+      user_id: userId,
     });
   }
 }

@@ -2,6 +2,7 @@
 import { ResumeModel } from '@/models/resume.model';
 import { resumeService } from '@/services/resume.service';
 import { copyToClipboard } from '@/utils/copy-to-clipboard';
+import { Popconfirm } from 'antd';
 import Link from 'next/link';
 import { FC, useEffect, useState } from 'react';
 import { FaCopy, FaEye } from 'react-icons/fa';
@@ -28,7 +29,7 @@ const Resumes: FC<IResumesProps> = () => {
       )) || (
         <ul className="mt-4">
           <li className="py-2 rounded border-b">
-            <div className="grid grid-cols-3">
+            <div className="grid grid-cols-4">
               <div className="text-center col-span-1">
                 <span className="text-[var(--primary-color)] font-semibold">
                   Tên CV
@@ -45,11 +46,14 @@ const Resumes: FC<IResumesProps> = () => {
                   Chia sẻ
                 </span>
               </div>
+              <div className="text-center col-span-1">
+                <span className="text-[var(--primary-color)] font-semibold"></span>
+              </div>
             </div>
           </li>
           {resumes.map((item) => (
             <li key={`saved_job_${item.id}`} className="py-2 border-b">
-              <div className="grid grid-cols-3 items-center">
+              <div className="grid grid-cols-4 items-center">
                 <div className="text-center col-span-1">
                   <span className="block">{item.name}</span>
                 </div>
@@ -73,6 +77,34 @@ const Resumes: FC<IResumesProps> = () => {
                   >
                     <FaCopy />
                   </span>
+                </div>
+                <div className="text-center col-span-1">
+                  <div className="flex justify-end">
+                    <Link href={`/resumes/${item.id}/edit`}>
+                      <span className="text-[var(--primary-color)]">
+                        Chỉnh sửa
+                      </span>
+                    </Link>
+                    <span className="mx-2">|</span>
+                    <Popconfirm
+                      title="Delete the task"
+                      description="Are you sure to delete this task?"
+                      onConfirm={() => {
+                        resumeService.delete(item.id).then((response) => {
+                          if (response.success) {
+                            setResumes(resumes.filter((i) => i.id !== item.id));
+                          }
+                        });
+                      }}
+                      okText="Yes"
+                      cancelText="No"
+                      color="white"
+                    >
+                      <span className="text-[var(--primary-color)] cursor-pointer">
+                        Xóa
+                      </span>
+                    </Popconfirm>
+                  </div>
                 </div>
               </div>
             </li>
