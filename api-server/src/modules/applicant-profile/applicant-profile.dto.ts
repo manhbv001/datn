@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  IsBoolean,
   IsBooleanString,
   IsDateString,
   IsEmail,
@@ -104,4 +105,9 @@ export class QueryApplicantProfilesDto extends BaseQueryDto {
   @IsOptional()
   @ApiProperty()
   occupation_ids: string;
+}
+
+export class ToggleFindingJobStatusDto {
+  @IsBoolean()
+  status: boolean;
 }

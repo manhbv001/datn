@@ -1,6 +1,5 @@
 'use client';
 import { AuthContext } from '@/contexts/auth/AuthProvider';
-import { Switch } from 'antd';
 import Link from 'next/link';
 import { useSelectedLayoutSegment } from 'next/navigation';
 import { FC, useContext } from 'react';
@@ -26,10 +25,6 @@ const ApplicantProfileSidebar: FC<IApplicantProfileSidebarProps> = () => {
       </div>
       <div className="text-center mt-4">
         <span className="text-lg font-semibold">{user?.fullname}</span>
-      </div>
-      <div className="flex justify-around items-center mt-2">
-        <span>Cho phép NTD tìm kiếm</span>
-        <Switch style={{ backgroundColor: 'var(--primary-color)' }} />
       </div>
       <div className="mt-4">
         <ul>

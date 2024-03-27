@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -13,10 +14,12 @@ import { Roles } from 'src/decorators/role.decorator';
 import { GetUser } from 'src/decorators/user.decorator';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { RoleGuard } from 'src/guards/role.guard';
+import { User } from '../user/user.entity';
 import { UserTypes } from '../user/user.enum';
 import {
   CreateApplicantProfileDto,
   QueryApplicantProfilesDto,
+  ToggleFindingJobStatusDto,
 } from './applicant-profile.dto';
 import { ApplicantProfileService } from './applicant-profile.service';
 
@@ -32,6 +35,16 @@ export class ApplicantProfileController {
     @GetUser('id') userId: number
   ) {
     return this.service.createOrUpdate(payload, userId);
+  }
+
+  @Patch('finding-job')
+  @Roles(UserTypes.Applicant)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  updateFindingJob(
+    @Body() payload: ToggleFindingJobStatusDto,
+    @GetUser() user: User
+  ) {
+    return this.service.toggleFindingJob(payload.status, user);
   }
 
   @Get('profile')

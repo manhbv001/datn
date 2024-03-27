@@ -31,4 +31,11 @@ export const applicantProfileService = {
       total: number;
     }>('applicant-profiles' + query);
   },
+
+  toggleFindingJob(status: boolean) {
+    return fetcher.clientReq(`applicant-profiles/finding-job`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    });
+  },
 };

@@ -37,6 +37,7 @@ type FieldType = {
 export interface IApplicantProfileProps {}
 const ApplicantProfile: FC<IApplicantProfileProps> = () => {
   const [loading, setLoading] = useState(true);
+  const [findingJob, setFindingJob] = useState(false);
   const [profile, setProfile] = useState<FieldType>({
     display_name: '',
     email: '',
@@ -79,6 +80,25 @@ const ApplicantProfile: FC<IApplicantProfileProps> = () => {
     });
   };
 
+  const toggleFindingJob = (status: boolean) => {
+    applicantProfileService
+      .toggleFindingJob(status)
+      .then((response) => {
+        if (response.success) {
+          if (!status) {
+            notification.success({
+              message: 'Đã tắt chế độ tìm việc',
+              description: 'Nhà tuyển dụng sẽ không thể xem hồ sơ của bạn',
+            });
+          }
+          setFindingJob(status);
+        }
+      })
+      .catch(() => {
+        notification.error({ message: 'Có lỗi xảy ra' });
+      });
+  };
+
   useEffect(() => {
     document.title = 'Hồ sơ cá nhân';
 
@@ -86,7 +106,7 @@ const ApplicantProfile: FC<IApplicantProfileProps> = () => {
       .getProfile()
       .then((response) => {
         const data = response.data;
-        if (response.success && response.data)
+        if (response.success && response.data) {
           setProfile({
             display_name: data.display_name,
             email: data.email,
@@ -102,6 +122,9 @@ const ApplicantProfile: FC<IApplicantProfileProps> = () => {
             occupation_ids: data.occupations.map((item) => item.id),
             work_province_ids: data.workProvinces.map((item) => item.id),
           });
+
+          setFindingJob(data.finding_job);
+        }
       })
       .finally(() => {
         setLoading(false);
@@ -407,7 +430,10 @@ const ApplicantProfile: FC<IApplicantProfileProps> = () => {
           </div>
           <div className="col-span-1">
             <div className="pt-3">
-              <SidebarRight />
+              <SidebarRight
+                status={findingJob}
+                onChangingStatus={toggleFindingJob}
+              />
             </div>
           </div>
         </div>

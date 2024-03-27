@@ -3,6 +3,7 @@ import { Utils } from 'src/utils/data.util';
 import { In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { OccupationService } from '../occupation/occupation.service';
 import { ProvinceService } from '../province/province.service';
+import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import {
   CreateApplicantProfileDto,
@@ -111,5 +112,14 @@ export class ApplicantProfileService {
       },
       relations: ['occupations', 'workProvinces'],
     });
+  }
+
+  toggleFindingJob(status: boolean, user: User) {
+    return this.repository.update(
+      { id: user.applicant_profile_id },
+      {
+        finding_job: status,
+      }
+    );
   }
 }

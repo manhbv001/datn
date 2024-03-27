@@ -1,14 +1,19 @@
 import { Switch } from 'antd';
 import Link from 'next/link';
 import { FC } from 'react';
+import './style.css';
 
-export interface ISidebarRightProps {}
-const SidebarRight: FC<ISidebarRightProps> = () => {
+export interface ISidebarRightProps {
+  status: boolean;
+  onChangingStatus: (status: boolean) => void;
+}
+
+const SidebarRight: FC<ISidebarRightProps> = ({ status, onChangingStatus }) => {
   return (
     <div>
       <div>
         <div className="flex items-center">
-          <Switch style={{ backgroundColor: 'var(--primary-color)' }} />
+          <Switch checked={status} onChange={onChangingStatus} />
           <span className="font-semibold ml-4">Cho phép NTD liên hệ bạn</span>
         </div>
         <p className="mt-4 opacity-50">
