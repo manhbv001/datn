@@ -1,5 +1,6 @@
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { resetPassword } from 'src/libs/nodemailer';
 import { OAuthProvider } from 'src/shared/enum/oauth-provider.enum';
 import { Utils } from 'src/utils/data.util';
 import { FindOptionsWhere, Repository } from 'typeorm';
@@ -123,5 +124,18 @@ export class AuthService {
     });
 
     return user;
+  }
+
+  async resetPassword(email: string) {
+    await this.userRepository.findOneOrFail({
+      where: {
+        email,
+      },
+    });
+    await resetPassword(Utils.generateRandomPassword(), email);
+
+    return {
+      email,
+    };
   }
 }

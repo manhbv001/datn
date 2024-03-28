@@ -21,7 +21,6 @@ export const SignInForm = () => {
       .login(values)
       .then((response) => {
         if (response.success) {
-          console.log(response.data.type === UserTypes.System);
           if (response.data.type === UserTypes.Recruiter)
             return router.replace(queryParams.redirect || '/recruiter');
 
@@ -341,6 +340,71 @@ export const EnterpriseSignUpForm = () => {
           </Form.Item>
         </Form>
       </div>
+    </div>
+  );
+};
+
+export const ResetPasswordForm = () => {
+  const router = useRouter();
+
+  const onFinish = async (values: { email: string }) => {
+    const result = await authServices.resetPassword(values.email);
+    if (result.success) {
+      message.success(
+        `Mật khẩu mới được gửi vào email ${values.email.slice(0, 8)}******!`,
+      );
+    } else {
+      message.error(result.message);
+    }
+  };
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('Failed:', errorInfo);
+  };
+
+  return (
+    <div className="w-[400px] max-w-[90%] mb-10">
+      <h1 className="font-semibold text-xl mb-8 flex items-end justify-between">
+        Quên mật khẩu{' '}
+        <Link
+          href="/sign-up"
+          className="inline-block text-sm opacity-60 font-normal"
+        >
+          Bạn chưa có tài khoản?
+        </Link>
+      </h1>
+      <Form
+        name="basic"
+        labelCol={{ span: 8 }}
+        initialValues={{ remember: true }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        autoComplete="off"
+        layout="vertical"
+      >
+        <Form.Item
+          label="Email"
+          name="email"
+          rules={[
+            { required: true, message: 'Vui lòng nhập email!' },
+            {
+              pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+              message: 'Email không đúng định dạng!',
+            },
+          ]}
+        >
+          <Input size="large" />
+        </Form.Item>
+        <Form.Item style={{ width: '100%' }}>
+          <CommonButton
+            style={{ color: 'white', padding: '6px', width: '100%' }}
+            type="primary"
+          >
+            Lấy lại mật khẩu
+          </CommonButton>
+        </Form.Item>
+      </Form>
+      <OAuthBtns />
     </div>
   );
 };

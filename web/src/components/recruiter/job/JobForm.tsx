@@ -160,6 +160,24 @@ const JobForm: FC<IJobFormProps> = ({ occupations, data, provinces }) => {
             </Form.Item>
             <Form.Item
               labelCol={{ span: 4 }}
+              wrapperCol={{ span: 20 }}
+              name="salary_from"
+              label="Mức lương từ:"
+              rules={[{ required: true }]}
+            >
+              <InputNumber />
+            </Form.Item>
+            <Form.Item
+              labelCol={{ span: 4 }}
+              wrapperCol={{ span: 20 }}
+              name="salary_to"
+              label="Đến:"
+              rules={[{ required: true }]}
+            >
+              <InputNumber />
+            </Form.Item>
+            <Form.Item
+              labelCol={{ span: 4 }}
               wrapperCol={{ span: 4 }}
               name="status"
               label="Trạng thái"
@@ -205,6 +223,7 @@ const JobForm: FC<IJobFormProps> = ({ occupations, data, provinces }) => {
               wrapperCol={{ span: 4 }}
               name="level"
               label="Trình độ"
+              required
             >
               <Select
                 options={[

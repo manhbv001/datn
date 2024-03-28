@@ -17,4 +17,27 @@ export class CreateEnterpriseDto {
   description: string;
 }
 
+export class UpdateEnterpriseDto {
+  @ApiProperty()
+  @IsString()
+  name: string;
+
+  @ApiProperty({ nullable: true })
+  @IsString()
+  @IsOptional()
+  address: string;
+
+  @ApiProperty({ nullable: true })
+  @IsString()
+  description: string;
+
+  @ApiProperty({ nullable: true })
+  @IsString()
+  cover: string;
+
+  @ApiProperty({ nullable: true })
+  @IsString()
+  logo: string;
+}
+
 export class QueryEnterprisesDto extends BaseQueryDto {}

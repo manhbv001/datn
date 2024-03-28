@@ -2,11 +2,10 @@
 import { CreatePostParams, PostModel } from '@/models/post';
 import { TopicModel } from '@/models/topic';
 import postServices from '@/services/post.service';
-import { toSlug } from '@/utils/to-slug';
 import { Button, Form, Input, Select, message } from 'antd';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { ChangeEvent, FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 
 /* eslint-disable no-template-curly-in-string */
 const validateMessages = {
@@ -34,10 +33,6 @@ const PostForm: FC<IPostFormProps> = ({ topics, data }) => {
   const router = useRouter();
   const [content, setContent] = useState(data?.content || '');
   const [thumbnailFile, setThumbnailFile] = useState<File>();
-  const [thumbnailPreview, setThumbnailPreview] = useState<string>(
-    data?.seo?.thumbnail || '',
-  );
-  const [url, setUrl] = useState('');
   const [title, setTitle] = useState(data?.title || '');
 
   const handleSubmit = (params: CreatePostParams) => {
@@ -54,7 +49,7 @@ const PostForm: FC<IPostFormProps> = ({ topics, data }) => {
         .then((response) => {
           if (response.success) {
             message.success('Thành công');
-            router.replace('/');
+            router.replace('/recruiter/posts');
           } else {
             message.error(response.message);
           }
@@ -72,7 +67,7 @@ const PostForm: FC<IPostFormProps> = ({ topics, data }) => {
         .then((response) => {
           if (response.success) {
             message.success('Thành công');
-            router.replace('/');
+            router.replace('/recruiter/posts');
           } else {
             message.error(response.message);
           }
@@ -84,22 +79,6 @@ const PostForm: FC<IPostFormProps> = ({ topics, data }) => {
     const data = editor.getData();
     setContent(data);
   };
-
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files && e.target.files[0];
-    if (!file) return;
-
-    const preview = URL.createObjectURL(file);
-    setThumbnailFile(file);
-    setThumbnailPreview(preview);
-  };
-
-  useEffect(() => {
-    if (!title) return setUrl('');
-
-    const slug = toSlug(title);
-    setUrl(`www.techomies.com/posts/${slug}`);
-  }, [title]);
 
   return (
     <div className="h-full overflow-auto">
@@ -116,9 +95,12 @@ const PostForm: FC<IPostFormProps> = ({ topics, data }) => {
         validateMessages={validateMessages}
       >
         <div className="flex justify-end gap-2">
-          <Button>Preview</Button>
           <Form.Item>
-            <Button htmlType="submit" type="primary">
+            <Button
+              htmlType="submit"
+              style={{ backgroundColor: 'blue' }}
+              type="primary"
+            >
               Submit
             </Button>
           </Form.Item>
@@ -159,9 +141,9 @@ const PostForm: FC<IPostFormProps> = ({ topics, data }) => {
             <Form.Item
               labelCol={{ span: 4 }}
               wrapperCol={{ span: 20 }}
+              rules={[{ required: true }]}
               name="status"
               label="Trạng thái"
-              rules={[{ required: true }]}
             >
               <Select
                 style={{ width: 160 }}
@@ -174,57 +156,20 @@ const PostForm: FC<IPostFormProps> = ({ topics, data }) => {
               />
             </Form.Item>
             <Form.Item
-              label="Noi dung"
+              label="Mô tả ngắn gọn"
               labelCol={{ span: 4 }}
               wrapperCol={{ span: 20 }}
-            >
-              <Editor value={content} onChange={handleContentChange} />
-            </Form.Item>
-          </div>
-          <div className="col-span-1">
-            <Form.Item
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
-              label="SEO"
-              style={{ marginBottom: 16, fontWeight: 'bold' }}
-            />
-            <Form.Item
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
-              label="URL"
               rules={[{ required: true }]}
-            >
-              <Input disabled value={url} />
-            </Form.Item>
-            <Form.Item
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
               name="description"
-              label="Mô tả"
             >
               <Input.TextArea />
             </Form.Item>
             <Form.Item
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
-              label="Thumbnail"
+              label="Nội dung"
+              labelCol={{ span: 4 }}
+              wrapperCol={{ span: 20 }}
             >
-              <input
-                accept="image/*"
-                onChange={handleFileChange}
-                type="file"
-                className="pt-1"
-              />
-              {thumbnailPreview && (
-                <div>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={thumbnailPreview}
-                    alt="Preview thumbnail"
-                    className="w-full mt-2"
-                  />
-                </div>
-              )}
+              <Editor value={content} onChange={handleContentChange} />
             </Form.Item>
           </div>
         </div>

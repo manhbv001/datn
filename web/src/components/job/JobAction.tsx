@@ -1,9 +1,10 @@
 'use client';
+import { AuthContext } from '@/contexts/auth/AuthProvider';
 import { JobModel } from '@/models/job.model';
 import { applicantService } from '@/services/applicant.service';
 import { jobServices } from '@/services/job.service';
-import { notification } from 'antd';
-import { FC, useEffect, useState } from 'react';
+import { message, notification } from 'antd';
+import { FC, useContext, useEffect, useState } from 'react';
 import { FaRegHeart } from 'react-icons/fa';
 import { RiProfileLine } from 'react-icons/ri';
 import ApplyModal from './ApplyModal';
@@ -12,15 +13,19 @@ export interface IJobActionsProps {
   job: JobModel;
 }
 const JobActions: FC<IJobActionsProps> = ({ job }) => {
+  const { user } = useContext(AuthContext);
   const [saveStatus, setSaveStatus] = useState(false);
   const [applyStatus, setApplyStatus] = useState(false);
   const [applyVisible, setApplyVisible] = useState(false);
 
   const handleApply = () => {
+    if (!user) return message.error('Vui lòng đăng nhập để ứng tuyển');
     setApplyVisible(true);
   };
 
   const handleSave = () => {
+    if (!user) return message.error('Vui lòng đăng nhập để lưu công việc');
+
     jobServices.save(job.id).then((response) => {
       if (response.success) {
         setSaveStatus(true);

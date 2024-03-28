@@ -4,7 +4,11 @@ import { AwsS3Service } from 'src/shared/services/aws-s3.service';
 import { Utils } from 'src/utils/data.util';
 import { Repository } from 'typeorm';
 import { UserService } from '../user/user.service';
-import { CreateEnterpriseDto, QueryEnterprisesDto } from './enterprise.dto';
+import {
+  CreateEnterpriseDto,
+  QueryEnterprisesDto,
+  UpdateEnterpriseDto,
+} from './enterprise.dto';
 import { Enterprise } from './enterprise.entity';
 
 export class EnterpriseService {
@@ -47,6 +51,22 @@ export class EnterpriseService {
     await this.userService.bindToEnterprise(userId, record.id);
 
     return record;
+  }
+
+  async update(id: number, payload: UpdateEnterpriseDto) {
+    const enterprise = await this.repository.findOne({ where: { id } });
+
+    if (!enterprise) {
+      throw new Error('Enterprise not found');
+    }
+
+    enterprise.address = payload.address;
+    enterprise.description = payload.description;
+    enterprise.name = payload.name;
+    enterprise.logo = payload.logo;
+    enterprise.cover = payload.cover;
+
+    return this.repository.save(enterprise);
   }
 
   async query(payload: QueryEnterprisesDto) {

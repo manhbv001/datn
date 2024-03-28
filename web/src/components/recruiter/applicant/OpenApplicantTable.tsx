@@ -93,8 +93,6 @@ const OpenApplicantsTable: React.FC = () => {
     });
   }, [queryParams]);
 
-  console.log(profiles);
-
   const tableData: ITableColumData[] = useMemo<ITableColumData[]>(() => {
     return profiles.map((profile, index) => {
       return {

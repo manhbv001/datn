@@ -5,6 +5,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   UploadedFiles,
   UseGuards,
@@ -15,8 +16,13 @@ import { ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/decorators/role.decorator';
 import { GetUser } from 'src/decorators/user.decorator';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { RoleGuard } from 'src/guards/role.guard';
 import { UserTypes } from '../user/user.enum';
-import { CreateEnterpriseDto, QueryEnterprisesDto } from './enterprise.dto';
+import {
+  CreateEnterpriseDto,
+  QueryEnterprisesDto,
+  UpdateEnterpriseDto,
+} from './enterprise.dto';
 import { EnterpriseService } from './enterprise.service';
 
 @ApiTags('Enterprise')
@@ -42,6 +48,13 @@ export class EnterpriseController {
     }: { logo: Express.Multer.File[]; cover?: Express.Multer.File[] }
   ) {
     return this.service.create(payload, id, logo[0], cover[0]);
+  }
+
+  @Put(':id')
+  @Roles(UserTypes.Recruiter)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  update(@Param('id') id: number, @Body() payload: UpdateEnterpriseDto) {
+    return this.service.update(id, payload);
   }
 
   @Get(':slug')

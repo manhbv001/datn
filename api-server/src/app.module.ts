@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
+import { MulterModule } from '@nestjs/platform-express';
 import {
   ScheduleModule as NestScheduleModule,
   ScheduleModule,
 } from '@nestjs/schedule';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { DatabaseModule } from './data-source/database.module';
 import { ApplicantProfileModule } from './modules/applicant-profile/applicant-profile.module';
 import { ApplicantModule } from './modules/applicant/applicant.module';
@@ -22,7 +25,11 @@ import { UserModule } from './modules/user/user.module';
 @Module({
   imports: [
     DatabaseModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+    }),
     NestScheduleModule.forRoot(),
+    MulterModule.register(),
     ScheduleModule,
     ProvinceModule,
     OccupationModule,

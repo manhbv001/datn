@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 };
 
 async function CreatePost() {
-  const { data: topics } = await topicServices.queryTopics();
+  const { data: topics } = await topicServices.queryTopicsServer();
 
   return (
     <div className="h-full">

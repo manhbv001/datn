@@ -49,6 +49,11 @@ const authServices = {
       method: 'post',
     });
   },
+  resetPassword(email: string) {
+    return fetcher.clientReq<{ email: string }>(
+      'auth/reset-password?email=' + email,
+    );
+  },
 };
 
 export default authServices;

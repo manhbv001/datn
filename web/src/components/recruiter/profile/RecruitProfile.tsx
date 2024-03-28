@@ -1,39 +1,60 @@
 'use client';
 import { AuthContext } from '@/contexts/auth/AuthProvider';
-import { UpdateAccountPayload } from '@/models/user';
-import userServices from '@/services/user.service';
+import { UpdateEnterisePayload } from '@/models/enterprise.model';
+import { enterpriseService } from '@/services/enterprise.service';
+import { uploadService } from '@/services/upload.service';
 import { Button, Form, Input, message } from 'antd';
-import { ChangeEvent, useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 
 const RecruitForm = () => {
   const { user, loading } = useContext(AuthContext);
-  const [avatarFile, setAvatarFile] = useState<File>();
-  const [avatarPreview, setAvatarPreview] = useState<string>();
+  const [logoUrl, setLogoUrl] = useState(user?.enterprise?.logo || '');
+  const [coverUrl, setCoverUrl] = useState(user?.enterprise?.cover || '');
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [coverFile, setCoverFile] = useState<File | null>(null);
 
-  const handleSubmit = (payload: UpdateAccountPayload) => {
-    userServices
-      .updateAccount({
-        fullname: payload.fullname,
-        username: payload.username,
-        avatar: avatarFile,
-      })
-      .then((res) => {
-        if (res.success) {
-          message.success('Thành công');
-        }
+  const handleUploadLogo = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setLogoFile(file);
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      setLogoUrl(reader.result as string);
+    };
+  };
+
+  const handleUploadCover = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setCoverFile(file);
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      setCoverUrl(reader.result as string);
+    };
+  };
+
+  const handleSubmit = async (values: any) => {
+    const logoUrlPayload: string = logoFile
+      ? (await uploadService.uploadFile(logoFile)).data.url
+      : logoUrl;
+    const coverUrlPayload: string = coverFile
+      ? (await uploadService.uploadFile(coverFile)).data.url
+      : coverUrl;
+    const payload: UpdateEnterisePayload = {
+      ...values,
+      logo: logoUrlPayload,
+      cover: coverUrlPayload,
+    };
+
+    enterpriseService
+      .update(user?.enterprise?.id as number, payload)
+      .then((response) => {
+        if (response.success)
+          message.success('Cập nhật thông tin doanh nghiệp thành công!');
       });
   };
-
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files && e.target.files[0];
-    if (!file) return;
-
-    const preview = URL.createObjectURL(file);
-    setAvatarFile(file);
-    setAvatarPreview(preview);
-  };
-
-  const avatarUrl = avatarPreview || user?.avatar_url;
 
   if (loading) return 'Loading';
 
@@ -43,45 +64,21 @@ const RecruitForm = () => {
         <Form
           name="basic"
           initialValues={{
-            fullname: user?.fullname || '',
-            username: user?.username || '',
+            name: user?.enterprise?.name || '',
+            address: user?.enterprise?.address || '',
+            description: user?.enterprise?.description || '',
+            logo: user?.enterprise?.logo || '',
+            cover: user?.enterprise?.cover || '',
           }}
           autoComplete="off"
           layout="vertical"
           onFinish={handleSubmit}
+          onFinishFailed={(error) => console.log(error)}
         >
-          <div className="flex gap-x-2">
-            <div className="w-1/2">
-              <Form.Item
-                label="Họ tên đại diện"
-                name="fullname"
-                style={{ marginBlock: 16 }}
-                rules={[{ required: true, message: 'Vui lòng nhập họ tên!' }]}
-              >
-                <Input />
-              </Form.Item>
-            </div>
-            <div className="w-1/2">
-              <Form.Item
-                label="Email đại diện"
-                name="email"
-                style={{ marginBlock: 16 }}
-                rules={[
-                  { required: true, message: 'Vui lòng nhập email!' },
-                  {
-                    pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-                    message: 'Email không đúng định dạng!',
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </div>
-          </div>
           <Form.Item
             label="Tên doanh nghiệp"
             style={{ marginBlock: 16 }}
-            name="enterprise_name"
+            name="name"
             rules={[
               { required: true, message: 'Vui lòng nhập Tên doanh nghiệp!' },
             ]}
@@ -91,7 +88,7 @@ const RecruitForm = () => {
           <Form.Item
             label="Địa chỉ"
             style={{ marginBlock: 16 }}
-            name="enterprise_address"
+            name="address"
             rules={[
               {
                 required: true,
@@ -102,41 +99,53 @@ const RecruitForm = () => {
             <Input />
           </Form.Item>
           <Form.Item
-            label="Mật khẩu"
-            name="password"
+            label="Mô tả"
+            name="description"
             style={{ marginBlock: 16 }}
-            rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
           >
-            <Input.Password />
+            <Input.TextArea />
           </Form.Item>
-          <Form.Item
-            label="Xác nhận mật khẩu"
-            name="confirm_password"
-            rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
-          >
-            <Input.Password />
-          </Form.Item>
-          <Form.Item>
+          <div>
+            <label>Logo</label>
             <input
               accept="image/*"
-              onChange={handleFileChange}
               type="file"
               className="pt-1"
+              placeholder="Chọn Logo"
+              onChange={handleUploadLogo}
             />
-            {avatarUrl && (
-              <div>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={avatarUrl}
-                  alt="Preview avatar"
-                  className="w-[120px] h-[120px] rounded mt-4"
-                />
-              </div>
-            )}
-          </Form.Item>
+            <div>
+              <img
+                src={logoUrl}
+                alt="logo"
+                className="w-20 h-20 rounded-full border object-cover my-2"
+              />
+            </div>
+          </div>
+          <div>
+            <label>Ảnh bìa</label>
+            <input
+              accept="image/*"
+              type="file"
+              className="pt-1"
+              placeholder="Chọn ảnh bìa"
+              onChange={handleUploadCover}
+            />
+            <div>
+              <img
+                src={coverUrl}
+                alt="cover"
+                className="w-[100%] aspect-[2] border my-2 object-cover"
+              />
+            </div>
+          </div>
           <Form.Item>
             <div className="flex justify-end">
-              <Button type="primary" htmlType="submit">
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ backgroundColor: 'blue' }}
+              >
                 Submit
               </Button>
             </div>

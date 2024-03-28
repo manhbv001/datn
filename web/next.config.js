@@ -2,6 +2,7 @@
 const nextConfig = {
   images: {
     domains: [
+      'api.localtechomies.com',
       'images.unsplash.com',
       'www.simplilearn.com',
       'i.pinimg.com',

@@ -11,6 +11,9 @@ import { FaUser } from 'react-icons/fa';
 import { FaLocationDot, FaPeopleGroup } from 'react-icons/fa6';
 import { IoMdBusiness } from 'react-icons/io';
 import { MdLocationOn, MdMapsHomeWork } from 'react-icons/md';
+import ReactMarkdown from 'react-markdown';
+import './job-detail.css';
+
 export interface IJobDetailPageProps {
   params: {
     slug: string;
@@ -95,7 +98,9 @@ const JobDetailPage: FC<IJobDetailPageProps> = async ({ params: { slug } }) => {
                 Mô tả công việc
               </h4>
               <div className="mt-4">
-                <div dangerouslySetInnerHTML={{ __html: job.description }} />
+                <div className="ck-post-content mt-8 leading-9 min-h-full">
+                  <ReactMarkdown>{job.description}</ReactMarkdown>
+                </div>
               </div>
             </div>
             <div className="mt-12">
@@ -103,7 +108,9 @@ const JobDetailPage: FC<IJobDetailPageProps> = async ({ params: { slug } }) => {
                 Quyền lợi được hưởng
               </h4>
               <div className="mt-4">
-                <div dangerouslySetInnerHTML={{ __html: job.benefit }} />
+                <div className="ck-post-content mt-8 leading-9 min-h-full">
+                  <ReactMarkdown>{job.benefit}</ReactMarkdown>
+                </div>
               </div>
             </div>
             <div className="mt-12">
@@ -111,7 +118,9 @@ const JobDetailPage: FC<IJobDetailPageProps> = async ({ params: { slug } }) => {
                 Yêu cầu công việc
               </h4>
               <div className="mt-4">
-                <div dangerouslySetInnerHTML={{ __html: job.requirement }} />
+                <div className="ck-post-content mt-8 leading-9 min-h-full">
+                  <ReactMarkdown>{job.requirement}</ReactMarkdown>
+                </div>
               </div>
             </div>
             <div className="mt-12">
@@ -122,14 +131,14 @@ const JobDetailPage: FC<IJobDetailPageProps> = async ({ params: { slug } }) => {
                 <div dangerouslySetInnerHTML={{ __html: job.work_place }} />
               </div>
             </div>
-            <div className="mt-12">
+            {/* <div className="mt-12">
               <h4 className="uppercase text-lg font-semibold text-[var(--brown)]">
                 Thời gian làm việc
               </h4>
               <div className="mt-4">
                 <div dangerouslySetInnerHTML={{ __html: job.work_time }} />
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="col-span-1 border-l pl-8">
             <div className="flex">

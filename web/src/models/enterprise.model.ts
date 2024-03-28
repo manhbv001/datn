@@ -10,3 +10,11 @@ export interface EnterpriseModel extends BaseModel {
   description: string;
   slug: string;
 }
+
+export interface UpdateEnterisePayload {
+  name: string;
+  logo: string;
+  cover: string;
+  address: string;
+  description: string;
+}

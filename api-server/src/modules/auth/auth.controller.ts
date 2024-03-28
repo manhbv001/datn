@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Post,
+  Query,
   Req,
   Res,
   UseGuards,
@@ -119,5 +120,11 @@ export class AuthController {
   @Get('me')
   async profile(@GetUser() user: User) {
     return this.service.me(user.id);
+  }
+
+  @Get('reset-password')
+  @ApiOperation({ summary: 'Reset password' })
+  async resetPassword(@Query('email') email: string) {
+    return this.service.resetPassword(email);
   }
 }
