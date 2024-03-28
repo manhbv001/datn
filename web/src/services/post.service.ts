@@ -106,6 +106,13 @@ const postServices = {
       method: 'delete',
     });
   },
+
+  updateState(id: number, state: boolean) {
+    return fetcher.clientReq(`jobs/${id}/state`, {
+      method: 'PATCH',
+      body: JSON.stringify({ state }),
+    });
+  },
 };
 
 export default postServices;

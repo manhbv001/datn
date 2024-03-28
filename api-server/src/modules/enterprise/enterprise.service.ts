@@ -68,4 +68,16 @@ export class EnterpriseService {
       },
     });
   }
+
+  async updateState(id: number, state: boolean) {
+    const enterprise = await this.repository.findOne({ where: { id } });
+
+    if (!enterprise) {
+      throw new Error('Enterprise not found');
+    }
+
+    enterprise.is_active = state;
+
+    return this.repository.save(enterprise);
+  }
 }

@@ -1,8 +1,16 @@
-import { FC } from 'react';
+import EnterprisesTable from '@/components/admin/enterprise/EnterpriseTable';
+import { Metadata } from 'next';
 
-export interface IEnterpriseProps {}
-const Enterprise: FC<IEnterpriseProps> = () => {
-  return <div></div>;
+export const metadata: Metadata = {
+  title: 'Quản lý doanh nghiệp - Techomies',
 };
 
-export default Enterprise;
+const EnterpriseList = () => {
+  return (
+    <main style={{ height: '100%', overflowY: 'auto' }}>
+      <EnterprisesTable />
+    </main>
+  );
+};
+
+export default EnterpriseList;

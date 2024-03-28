@@ -6,8 +6,10 @@ import { applicantService } from '@/services/applicant.service';
 import { formatNumberWithUnit } from '@/utils/number.util';
 import { Select, notification } from 'antd';
 import dayjs from 'dayjs';
+import Link from 'next/link';
 import { FC, useEffect, useState } from 'react';
 import { FaEnvelope, FaPhone } from 'react-icons/fa';
+import { IoDocumentAttachOutline } from 'react-icons/io5';
 
 export interface IApplicantDetailInforProps {
   id: number;
@@ -38,7 +40,17 @@ const ApplicantDetailInfor: FC<IApplicantDetailInforProps> = ({ id }) => {
       <div className="w-1/2">
         <h1 className="text-2xl font-semibold">
           {data?.applicant_profile.display_name}
+          {data.resume && (
+            <Link
+              href={`/resumes/${data.resume.template_id}/${data.resume_id}`}
+              className="inline-block ml-2 translate-y-[3px] text-blue-500 hover:text-blue-700"
+              target="_blank"
+            >
+              <IoDocumentAttachOutline />
+            </Link>
+          )}
         </h1>
+
         <div className="flex gap-x-2 mt-4">
           <label className="text-lg opacity-75">Giới tính:</label>
           <p className="text-lg">{data?.applicant_profile.gender}</p>

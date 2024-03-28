@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Put,
   Query,
@@ -81,5 +82,15 @@ export class JobController {
   @UseGuards(OptionalJwtAuthGuard)
   query(@Query() query: QueryJobsDto, @GetUser('id') userId: number) {
     return this.service.query(query, userId);
+  }
+
+  @Patch(':id/state')
+  @Roles(UserTypes.System)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  updateState(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('state') state: boolean
+  ) {
+    return this.service.updateState(id, state);
   }
 }

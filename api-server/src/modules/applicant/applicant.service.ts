@@ -117,7 +117,7 @@ export class ApplicantService {
       where: {
         id,
       },
-      relations: ['applicant_profile'],
+      relations: ['applicant_profile', 'resume', 'job'],
     });
   }
 

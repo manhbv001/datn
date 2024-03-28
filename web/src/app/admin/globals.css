@@ -6,6 +6,9 @@
 }
 
 .ck.ck-content.ck-editor__editable.ck-rounded-corners.ck-editor__editable_inline {
-    min-height: 300px;
-    max-height: 600px;
+  min-height: 300px;
+  max-height: 600px;
+}
+.ant-switch {
+  background: rgba(0, 0, 0, 0.45);
 }

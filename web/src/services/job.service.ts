@@ -59,4 +59,11 @@ export const jobServices = {
       body: JSON.stringify(payload),
     });
   },
+
+  updateState(id: number, state: boolean) {
+    return fetcher.clientReq(`jobs/${id}/state`, {
+      method: 'PATCH',
+      body: JSON.stringify({ state }),
+    });
+  },
 };

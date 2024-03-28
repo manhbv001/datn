@@ -14,7 +14,22 @@ export const enterpriseService = {
     );
   },
 
+  query(params: QueryEnterprisesParams = {}) {
+    const query = toQueryParams(params);
+
+    return fetcher.clientReq<{ enterprises: EnterpriseModel[]; total: number }>(
+      `enterprises${query}`,
+    );
+  },
+
   getBySlug(slug: string) {
     return fetcher.serverReq<EnterpriseModel>(`enterprises/${slug}`);
+  },
+
+  updateState(id: number, isActive: boolean) {
+    return fetcher.clientReq<{ success: boolean }>(`enterprises/${id}/state`, {
+      method: 'PATCH',
+      body: JSON.stringify({ isActive }),
+    });
   },
 };

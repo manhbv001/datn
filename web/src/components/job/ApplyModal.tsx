@@ -30,7 +30,6 @@ type FieldType = {
 const options = [
   { label: 'Mẫu CV', value: 'cv' },
   { label: 'Hồ sơ online', value: 'online' },
-  { label: 'Hồ sơ đính kèm', value: 'attachment' },
 ];
 export interface IApplyModalProps {
   job: JobModel;
@@ -238,6 +237,8 @@ const ApplyModal: FC<IApplyModalProps> = ({
                   onChange={(e) => {
                     setCoverLetter(e.target.value);
                   }}
+                  defaultValue={`I possess aggressive marketing and good negotiating skills. My verbal communication skills and positive attitude makes me an effective communicator with my customers. Given the opportunity, I would be able to become an excellent representative of your sales team. (Show your other skill, strength)
+                  Please consider the enclosed resume to know more about my professionalism, background and skills. I look forward to have an opportunity of discussing my application with you further and how I can significantly contribute to the ongoing of your reputable company.`}
                 />
               </div>
             </div>

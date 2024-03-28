@@ -1,6 +1,7 @@
 import { ApplicantProfileModel } from './applicant-profile.model';
 import { BaseModel, BaseQueryParams } from './common';
 import { JobModel } from './job.model';
+import { ResumeModel } from './resume.model';
 
 export interface ApplicantModel extends BaseModel {
   job_id: number;
@@ -10,6 +11,7 @@ export interface ApplicantModel extends BaseModel {
   job: JobModel;
   applicant_profile: ApplicantProfileModel;
   status: ApplicantStatus;
+  resume?: ResumeModel;
 }
 
 export interface ApplyJobPayload {

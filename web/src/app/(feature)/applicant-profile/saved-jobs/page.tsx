@@ -5,10 +5,17 @@ import { jobServices } from '@/services/job.service';
 import { formatNumberWithUnit } from '@/utils/number.util';
 import Link from 'next/link';
 import { FC, useEffect, useState } from 'react';
+import { IoMdRemoveCircleOutline } from 'react-icons/io';
 
 export interface ISavedJobsProps {}
 const SavedJobs: FC<ISavedJobsProps> = () => {
   const [savedJobs, setSavedJobs] = useState<JobModel[]>([]);
+
+  const handleUnsaveJob = async (id: number) => {
+    const response = await jobServices.save(id);
+    if (response.success)
+      setSavedJobs(savedJobs.filter((item) => item.id !== id) || []);
+  };
 
   useEffect(() => {
     document.title = 'Việc làm đã lưu';
@@ -25,7 +32,7 @@ const SavedJobs: FC<ISavedJobsProps> = () => {
       </h3>
       <ul className="mt-4">
         <li className="py-2 rounded border-b">
-          <div className="grid grid-cols-5">
+          <div className="grid grid-cols-6">
             <div className="text-center col-span-2">
               <span className="text-[var(--primary-color)] font-semibold">
                 Vị trí / Công ty
@@ -46,11 +53,16 @@ const SavedJobs: FC<ISavedJobsProps> = () => {
                 Thời hạn ứng tuyển
               </span>
             </div>
+            <div className="text-center col-span-1">
+              <span className="text-[var(--primary-color)] font-semibold">
+                Bỏ lưu
+              </span>
+            </div>
           </div>
         </li>
         {savedJobs.map((item) => (
           <li key={`saved_job_${item.id}`} className="py-2 border-b">
-            <div className="grid grid-cols-5 items-center">
+            <div className="grid grid-cols-6 items-center">
               <div className="text-center col-span-2">
                 <Link
                   href={`/jobs/${item.slug}`}
@@ -83,6 +95,14 @@ const SavedJobs: FC<ISavedJobsProps> = () => {
                     ? datetime.formattedDate(item.expired_date!)
                     : 'N/A'}
                 </span>
+              </div>
+              <div className="text-center col-span-1">
+                <button
+                  onClick={() => handleUnsaveJob(item.id)}
+                  className="mx-auto flex justify-center"
+                >
+                  <IoMdRemoveCircleOutline color="red" />
+                </button>
               </div>
             </div>
           </li>

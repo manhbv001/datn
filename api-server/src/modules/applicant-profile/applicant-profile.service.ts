@@ -92,9 +92,8 @@ export class ApplicantProfileService {
       where: {
         ...queryParams,
         finding_job: true,
-        is_active: true,
       },
-      relations: ['workProvinces', 'occupations'],
+      relations: ['workProvinces', 'occupations', 'province'],
       skip,
       take,
     });
@@ -119,6 +118,15 @@ export class ApplicantProfileService {
       { id: user.applicant_profile_id },
       {
         finding_job: status,
+      }
+    );
+  }
+
+  updateState(id: number, state: boolean) {
+    return this.repository.update(
+      { id },
+      {
+        is_active: state,
       }
     );
   }

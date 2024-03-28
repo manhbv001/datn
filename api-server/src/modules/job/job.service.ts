@@ -1,6 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AwsS3Service } from 'src/shared/services/aws-s3.service';
 import { Utils } from 'src/utils/data.util';
 import { LessThanOrEqual, MoreThanOrEqual, Not, Repository } from 'typeorm';
 import { User } from '../user/user.entity';
@@ -13,8 +12,7 @@ export class JobService {
   constructor(
     @InjectRepository(Job) private readonly repository: Repository<Job>,
     @InjectRepository(SavedJob)
-    private readonly savedRepository: Repository<SavedJob>,
-    private awsS3Service: AwsS3Service
+    private readonly savedRepository: Repository<SavedJob>
   ) {}
 
   async createOrUpdate(payload: CreateJobDto, user: User, id?: number) {
@@ -200,5 +198,9 @@ export class JobService {
       },
       relations: ['enterprise', 'province'],
     });
+  }
+
+  updateState(id: number, isActive: boolean) {
+    return this.repository.update(id, { is_active: isActive });
   }
 }

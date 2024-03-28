@@ -64,4 +64,14 @@ export class ApplicantProfileController {
   query(@Query() params: QueryApplicantProfilesDto) {
     return this.service.query(params);
   }
+
+  @Patch(':id/state')
+  @Roles(UserTypes.System)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  updateState(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('isActive') isActive: boolean
+  ) {
+    return this.service.updateState(id, isActive);
+  }
 }

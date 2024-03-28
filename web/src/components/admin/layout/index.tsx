@@ -8,6 +8,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSelectedLayoutSegments } from 'next/navigation';
 import React, { PropsWithChildren, useContext, useState } from 'react';
+import { BsFillPostcardFill } from 'react-icons/bs';
+import { FaUserTie } from 'react-icons/fa';
+import { IoBusiness } from 'react-icons/io5';
 import { MdBusinessCenter } from 'react-icons/md';
 
 const { Header, Content, Sider } = Layout;
@@ -30,7 +33,10 @@ function getItem(
 
 const items: MenuItem[] = [
   getItem('Tổng quan', 'admin', <MdBusinessCenter />),
-  // getItem('Danh sách công ty', 'admin/enterprises', <IoBusiness />),
+  getItem('Danh sách công ty', 'admin/enterprises', <IoBusiness />),
+  getItem('Danh sách công việc', 'admin/jobs', <MdBusinessCenter />),
+  getItem('Danh sách ứng viên', 'admin/applicant-profiles', <FaUserTie />),
+  getItem('Danh sách bài viết', 'admin/posts', <BsFillPostcardFill />),
 ];
 
 interface IeEcruiterLayoutProps extends PropsWithChildren {}

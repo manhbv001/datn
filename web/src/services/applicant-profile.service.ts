@@ -38,4 +38,14 @@ export const applicantProfileService = {
       body: JSON.stringify({ status }),
     });
   },
+
+  updateState(id: number, isActive: boolean) {
+    return fetcher.clientReq<{ success: boolean }>(
+      `applicant-profiles/${id}/state`,
+      {
+        method: 'PATCH',
+        body: JSON.stringify({ isActive }),
+      },
+    );
+  },
 };
